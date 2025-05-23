@@ -20,7 +20,7 @@ window.login = () => {
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       document.getElementById("status").innerText = "Login sukses! Selamat datang, " + userCredential.user.email;
-      setTimeout(() => location.href = "profile.html", 1000);
+      setTimeout(() => location.href = "dashboard.html", 1000);
     })
     .catch((error) => {
       document.getElementById("status").innerText = "Gagal login: " + error.message;
