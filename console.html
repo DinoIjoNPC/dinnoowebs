@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Console Dinnoo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Console Script</h2>
+    <input type="file" id="fileInput" />
+    <button onclick="start()">Start</button>
+    <button onclick="stop()">Stop</button>
+    <button onclick="restart()">Restart</button>
+    <button onclick="clearLog()">Delete Log</button>
+    <pre id="output" style="background:#111;color:#0f0;padding:10px;height:200px;overflow:auto;"></pre>
+  </div>
+  <script>
+    let running = false;
+    function start() {
+      running = true;
+      log(">> Script dijalankan...");
+    }
+    function stop() {
+      running = false;
+      log(">> Script dihentikan.");
+    }
+    function restart() {
+      running = true;
+      log(">> Script di-restart.");
+    }
+    function clearLog() {
+      document.getElementById("output").textContent = "";
+    }
+    function log(text) {
+      if (running) {
+        const out = document.getElementById("output");
+        out.textContent += text + "\\n";
+        out.scrollTop = out.scrollHeight;
+      }
+    }
+  </script>
+</body>
+</html>

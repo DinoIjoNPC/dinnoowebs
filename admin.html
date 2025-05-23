@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Admin Settings</h2>
+    <p><strong>Akun Developer:</strong> bielnpcbaik@gmail.com</p>
+    <input type="text" id="verifyUser" placeholder="@username untuk verifikasi">
+    <button onclick="verify()">Verifikasi Akun</button>
+    <input type="text" id="blockUser" placeholder="@username untuk blokir">
+    <button onclick="block()">Blokir Akun</button>
+    <div id="logArea"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBTw79BA_v7vAPGZoLXHUJfbCK8KneM3pI",
+      authDomain: "dinnoo-club.firebaseapp.com",
+      projectId: "dinnoo-club",
+      storageBucket: "dinnoo-club.firebasestorage.app",
+      messagingSenderId: "394748503119",
+      appId: "1:394748503119:web:01b61e42941fb5bf02b63a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+
+    onAuthStateChanged(auth, user => {
+      if (!user || user.uid !== "111555") {
+        alert("Bukan akun developer!");
+        window.location.href = "index.html";
+      }
+    });
+
+    window.verify = () => {
+      const u = document.getElementById("verifyUser").value;
+      document.getElementById("logArea").innerHTML += `<p>✔️ Akun ${u} berhasil diverifikasi.</p>`;
+    };
+
+    window.block = () => {
+      const u = document.getElementById("blockUser").value;
+      document.getElementById("logArea").innerHTML += `<p>❌ Akun ${u} telah diblokir.</p>`;
+    };
+  </script>
+</body>
+</html>
