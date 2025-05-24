@@ -1,5 +1,12 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, updateProfile } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  updateProfile
+} from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBTw79BA_v7vAPGZoLXHUJfbCK8KneM3pI",
@@ -17,10 +24,11 @@ const auth = getAuth();
 window.login = () => {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
+
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       document.getElementById("status").innerText = "Login sukses! Selamat datang, " + userCredential.user.email;
-      setTimeout(() => location.href = "dashboard.html";, 1000);
+      setTimeout(() => location.href = "dashboard.html", 1000);
     })
     .catch((error) => {
       document.getElementById("status").innerText = "Gagal login: " + error.message;
@@ -36,7 +44,7 @@ window.register = () => {
     .then((userCredential) => {
       updateProfile(userCredential.user, { displayName: username }).then(() => {
         document.getElementById("status").innerText = "Registrasi sukses. Selamat datang, " + username;
-        setTimeout(() => location.href = "profile.html", 1000);
+        setTimeout(() => location.href = "dashboard.html", 1000);
       });
     })
     .catch((error) => {
@@ -49,7 +57,7 @@ window.loginWithGoogle = () => {
   signInWithPopup(auth, provider)
     .then((result) => {
       document.getElementById("status").innerText = "Login Google sukses! Selamat datang, " + result.user.displayName;
-      setTimeout(() => location.href = "profile.html", 1000);
+      setTimeout(() => location.href = "dashboard.html", 1000);
     })
     .catch((error) => {
       document.getElementById("status").innerText = "Gagal login Google: " + error.message;
