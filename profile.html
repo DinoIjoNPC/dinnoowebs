@@ -3,22 +3,107 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Profil Saya</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Profil Dinnoo</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #fff;
+    }
+    .profile-container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+    .profile-header {
+      display: flex;
+      align-items: center;
+    }
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: gray;
+      margin-right: 20px;
+    }
+    .stats {
+      display: flex;
+      gap: 20px;
+    }
+    .stats div {
+      text-align: center;
+    }
+    .username {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 10px 0 5px;
+    }
+    .bio {
+      color: #aaa;
+      font-size: 14px;
+    }
+    .actions {
+      margin-top: 15px;
+    }
+    .actions button {
+      background: #fff;
+      color: #000;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    .feed {
+      margin-top: 30px;
+    }
+    .feed-post {
+      background: #111;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+    }
+    .feed-post img {
+      max-width: 100%;
+      border-radius: 6px;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Profil Saya</h2>
-    <p><strong>Nama:</strong> <span id="displayName"></span></p>
-    <p><strong>Username:</strong> <span id="usernameDisplay"></span></p>
-    <p><strong>Email:</strong> <span id="emailDisplay"></span></p>
-    <p><strong>Bergabung sejak:</strong> <span id="joinDate"></span></p>
-    <button onclick="logout()">Log Out</button>
+  <div class="profile-container">
+    <div class="profile-header">
+      <img id="profileImg" class="avatar" src="https://via.placeholder.com/80" alt="foto profil">
+      <div>
+        <div class="username" id="username">@username</div>
+        <div class="bio" id="bio">Bio pengguna</div>
+        <div class="stats">
+          <div><strong id="postCount">0</strong><br>Post</div>
+          <div><strong id="followersCount">0</strong><br>Followers</div>
+          <div><strong id="followingCount">0</strong><br>Mengikuti</div>
+        </div>
+        <div class="actions">
+          <button>Edit Profil</button>
+          <button onclick="logout()">Log Out</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="feed" id="feedContainer"></div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      collection,
+      query,
+      where,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBTw79BA_v7vAPGZoLXHUJfbCK8KneM3pI",
@@ -31,19 +116,40 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth();
+    const db = getFirestore(app);
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById("displayName").textContent = user.displayName || "(Belum diset)";
-        document.getElementById("usernameDisplay").textContent = "@" + (user.displayName || "anonymous");
-        document.getElementById("emailDisplay").textContent = user.email;
-        document.getElementById("joinDate").textContent = new Date(user.metadata.creationTime).toLocaleDateString();
-      } else {
-        window.location.href = "index.html";
-      }
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) return location.href = "index.html";
+
+      const uname = user.displayName || "user";
+      document.getElementById("username").textContent = "@" + uname;
+      document.getElementById("profileImg").src = user.photoURL || "https://via.placeholder.com/80";
+
+      const userRef = doc(db, "users", uname);
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.exists() ? userSnap.data() : {};
+
+      document.getElementById("bio").textContent = userData.bio || "Pengguna Dinnoo";
+      document.getElementById("followersCount").textContent = (userData.followers || []).length;
+      document.getElementById("followingCount").textContent = (userData.following || []).length;
+
+      const q = query(collection(db, "posts"), where("owner", "==", uname));
+      const snapshot = await getDocs(q);
+      document.getElementById("postCount").textContent = snapshot.size;
+
+      const feed = document.getElementById("feedContainer");
+      snapshot.forEach(doc => {
+        const post = doc.data();
+        const html = `
+          <div class="feed-post">
+            <img src="${post.image}" alt="gambar">
+            <p>${post.caption}</p>
+          </div>`;
+        feed.innerHTML += html;
+      });
     });
 
     window.logout = () => signOut(auth).then(() => location.href = "index.html");
   </script>
 </body>
-</html>
+  </html>
