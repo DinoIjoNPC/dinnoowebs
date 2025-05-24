@@ -5,24 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FLUX EX</title>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #000;
-      color: #fff;
-    }
-    .header {
+    body { margin: 0; font-family: Arial, sans-serif; background: #000; color: #fff; }
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       background: #111;
-      padding: 15px;
-      text-align: center;
-      font-weight: bold;
-      font-size: 22px;
+      padding: 10px 15px;
       border-bottom: 1px solid #333;
     }
+    .nav-links a {
+      text-decoration: none;
+      color: #aaa;
+      padding: 6px 14px;
+      border: 1px solid #555;
+      border-radius: 30px;
+      font-size: 14px;
+      margin-right: 6px;
+      opacity: 0.5;
+    }
+    .nav-links a.active {
+      border-color: #0f0;
+      color: #fff;
+      opacity: 1;
+    }
     .menu-btn {
-      position: fixed;
-      top: 15px;
-      right: 15px;
       font-size: 24px;
       background: transparent;
       border: 1px solid #555;
@@ -30,12 +37,11 @@
       padding: 5px 12px;
       border-radius: 6px;
       cursor: pointer;
-      z-index: 99;
       opacity: 0.7;
     }
     .menu-dropdown {
       position: fixed;
-      top: 55px;
+      top: 50px;
       right: 15px;
       background: #111;
       border: 1px solid #444;
@@ -51,15 +57,20 @@
       display: block;
       border-bottom: 1px solid #333;
     }
-    .menu-dropdown a:last-child {
-      border-bottom: none;
+    .menu-dropdown a:last-child { border-bottom: none; }
+
+    .header-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      padding: 15px 0;
+      letter-spacing: 2px;
+      color: #0ff;
     }
-    .new-post {
+    .new-post, .feed {
       max-width: 600px;
-      margin: 20px auto;
-      padding: 10px 20px;
-      border: 1px solid #333;
-      border-radius: 6px;
+      margin: auto;
+      padding: 20px;
     }
     .new-post textarea {
       width: 100%;
@@ -80,11 +91,6 @@
       border-radius: 6px;
       cursor: pointer;
     }
-    .feed {
-      max-width: 600px;
-      margin: auto;
-      padding: 20px;
-    }
     .post {
       display: flex;
       gap: 10px;
@@ -97,27 +103,12 @@
       border-radius: 50%;
       background: gray;
     }
-    .content {
-      flex: 1;
-    }
-    .meta {
-      font-weight: bold;
-    }
-    .meta small {
-      color: #888;
-      margin-left: 5px;
-    }
-    .caption {
-      margin: 5px 0;
-    }
-    .post img {
-      width: 100%;
-      border-radius: 6px;
-      margin-top: 6px;
-    }
-    .actions {
-      margin-top: 5px;
-    }
+    .content { flex: 1; }
+    .meta { font-weight: bold; }
+    .meta small { color: #888; margin-left: 5px; }
+    .caption { margin: 5px 0; }
+    .post img { width: 100%; border-radius: 6px; margin-top: 6px; }
+    .actions { margin-top: 5px; }
     .actions button {
       background: transparent;
       border: 1px solid #444;
@@ -127,40 +118,24 @@
       font-size: 12px;
       margin-right: 5px;
     }
-    .nav {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background: rgba(255,255,255,0.05);
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 0;
-      border-top: 1px solid #333;
-    }
-    .nav a {
-      color: #aaa;
-      border: 1px solid #555;
-      padding: 5px 14px;
-      border-radius: 30px;
-      text-decoration: none;
-      font-size: 14px;
-      opacity: 0.5;
-    }
-    .nav a.active {
-      border-color: #0f0;
-      color: #fff;
-      opacity: 1;
-    }
   </style>
 </head>
 <body>
-  <div class="header">FLUX EX</div>
-  <div class="menu-btn" onclick="toggleMenu()">☰</div>
+  <div class="top-nav">
+    <div class="nav-links">
+      <a href="dashboard.html" class="active">Flux EX - AI</a>
+      <a href="threads.html">Threads</a>
+      <a href="profile.html">Profile</a>
+    </div>
+    <div class="menu-btn" onclick="toggleMenu()">☰</div>
+  </div>
   <div class="menu-dropdown" id="menuDrop">
     <a href="profile.html">Profil</a>
     <a href="#">Pengaturan</a>
     <a href="#" onclick="logout()">Keluar</a>
   </div>
+
+  <div class="header-title">FLUX EX</div>
 
   <div class="new-post">
     <textarea id="newPostText" placeholder="Tulis sesuatu..."></textarea>
@@ -168,12 +143,6 @@
   </div>
 
   <div class="feed" id="feedContainer"></div>
-
-  <div class="nav">
-    <a href="dashboard.html" class="active">Dashboard</a>
-    <a href="threads.html">Threads</a>
-    <a href="profile.html">Profile</a>
-  </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
@@ -244,4 +213,4 @@
     };
   </script>
 </body>
-    </html>
+</html>
